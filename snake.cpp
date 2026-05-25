@@ -27,7 +27,7 @@ class GameLogic {
     private:
     const int ROWS = 16;
     const int COLLUMNS = 32;
-    queue<bool> snakeState  ;
+    queue<bool> snakeState;
     int apple;
 
     public:
@@ -40,12 +40,18 @@ class GameLogic {
     return (position+1)%COLLUMNS == 0 ? ((position+1)/COLLUMNS - 1)  : ((position+1)/COLLUMNS)
     }
 
+    int getPosition(){
+        return snakeState.front();
+    }
+
     int calculateIndexOfCoordinates(int row, int collumn){
         return row == 0 ? collumn : ((row-1)*COLLUMNS + row)
     }
 
     int move(Direction moveDirrection)
     {
+        int currentPosition = getPosition();
+        
         switch (moveDirrection){
             case Left: {
 
