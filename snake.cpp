@@ -14,7 +14,7 @@
 #include<iostream>
 #include<time.h>
 #include<stdllib.h>
-
+#include <queue>
 
 enum Direction {
     Up,
@@ -27,7 +27,7 @@ class GameLogic {
     private:
     const int ROWS = 16;
     const int COLLUMNS = 32;
-    bool snakeState[512];
+    queue<bool> snakeState  ;
     int apple;
 
     public:
@@ -43,6 +43,17 @@ class GameLogic {
     int calculateIndexOfCoordinates(int row, int collumn){
         return row == 0 ? collumn : ((row-1)*COLLUMNS + row)
     }
+
+    int move(Direction moveDirrection)
+    {
+        switch (moveDirrection){
+            case Left: {
+
+            }
+        }
+        
+    }
+
 
     const bool* getSnakeState()
     {
