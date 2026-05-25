@@ -1,5 +1,14 @@
 //Oled 1306  128x64 - 32x16 16 collumns, 32 rows
-
+/*
+00001000
+00001110
+00000010
+32<-->
+    ^
+16  |
+    |
+    ^
+*/
 
 
 #include<iostream>
@@ -18,8 +27,9 @@ class GameLogic {
     private:
     const int ROWS = 16;
     const int COLLUMNS = 32;
-    bool SnakeState[512];
+    bool snakeState[512];
     int apple;
+
     public:
 
     int calculateCollumn(int position){
@@ -29,7 +39,21 @@ class GameLogic {
     int calculateRows(int position){
     return (position+1)%COLLUMNS == 0 ? ((position+1)/COLLUMNS - 1)  : ((position+1)/COLLUMNS)
     }
-    
+
+    int calculateIndexOfCoordinates(int row, int collumn){
+        return row == 0 ? collumn : ((row-1)*COLLUMNS + row)
+    }
+
+    const bool* getSnakeState()
+    {
+        return snakeState;
+    }
+
+    const int getApple()
+    {
+        return apple;
+    }    
+
 
 
 };
