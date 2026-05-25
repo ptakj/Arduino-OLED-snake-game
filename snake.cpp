@@ -23,9 +23,12 @@ class GameLogic {
     public:
 
     int calculateCollumn(int position){
-    return position%COLLUMNS == 0 ? 
+    return position%COLLUMNS
     }
 
+    int calculateRows(int position){
+    return (position+1)%COLLUMNS == 0 ? ((position+1)/COLLUMNS - 1)  : ((position+1)/COLLUMNS)
+    }
     
 
 
