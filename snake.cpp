@@ -10,13 +10,13 @@
     ^
 */
 
-
+#include <cstdint>
 #include<iostream>
 #include<time.h>
-#include<stdllib.h>
-#include <queue>
+#include <vector>
+#include <algorithm>
 
-enum Direction {
+enum Direction : uint8_t{
     Up,
     Down,
     Left,
@@ -25,43 +25,103 @@ enum Direction {
 
 class GameLogic {
     private:
-    const int ROWS = 16;
-    const int COLLUMNS = 32;
-    queue<bool> snakeState;
+    Direction currentDirection = Direction.Right;
+    const uint8_t ROWS = 16;
+    const uint8_t COLLUMNS = 32;
+    int snakeState[512] = {-1}; // from 0 to 512, from tail to head, -1 equals empty
+    uint8_t score = 1;
     int apple;
 
     public:
 
+    void setup (){
+        srand(time(NULL));
+        snakeState[calculateIndexOfCoordinates(8,15)];
+    }
+
+    void generateApple(){
+        int tmp = rand()%512; 
+        while(snakeState[tmp] != -1){
+            tmp = rand()%512; 
+        }
+        apple = tmp;
+    }
+
+
+    //width
     int calculateCollumn(int position){
-    return position%COLLUMNS
+    return position%COLLUMNS;
     }
 
+
+    //height
     int calculateRows(int position){
-    return (position+1)%COLLUMNS == 0 ? ((position+1)/COLLUMNS - 1)  : ((position+1)/COLLUMNS)
+    return (position+1)%COLLUMNS == 0 ? ((position+1)/COLLUMNS - 1)  : ((position+1)/COLLUMNS);
     }
 
-    int getPosition(){
-        return snakeState.front();
+
+    int getHeadPosition(){
+        for (int i=0; i<512; i++){
+            if(snakeState[i] == score)
+                return i;
+        }
+        
+        return -1;
     }
 
     int calculateIndexOfCoordinates(int row, int collumn){
-        return row == 0 ? collumn : ((row-1)*COLLUMNS + row)
+        return row == 0 ? collumn : ((row-1)*COLLUMNS + row);
     }
 
-    int move(Direction moveDirrection)
-    {
-        int currentPosition = getPosition();
-        
-        switch (moveDirrection){
-            case Left: {
+    int normaliseHeight(int height){
+        switch (height) {
+            case 16:
+                return 0;
+            case -1: 
+                return 15;
+            default:
+                return height;
+        }
+    }
 
-            }
+    int normaliseWidth(int width){
+        switch(width) {
+            case -1:
+                return 32;
+            case 32:
+                return 0;
+            default:
+                return width;
+        }
+    }
+
+    int move(Direction moveDirrection, int position)
+    {
+        int width = calculateCollumn(position);
+        int height = calculateRows(position);
+
+        switch (moveDirrection){
+            case Left:
+                width--;
+                break;        
+            case Right:
+                width++;
+                break;
+            case Up:
+                height++;
+                break;
+            case Down:
+                height --;
+                break;
         }
         
+        height = normaliseHeight(height);
+        width = normaliseWidth(width);
+        return calculateIndexOfCoordinates(width, height);
     }
 
 
-    const bool* getSnakeState()
+    const int* getSnakeState()
     {
         return snakeState;
     }
@@ -74,3 +134,9 @@ class GameLogic {
 
 
 };
+
+int main()
+{
+    std::cout<<((-65)%64);
+    return 0;
+}
