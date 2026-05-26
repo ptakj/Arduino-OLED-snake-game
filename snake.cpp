@@ -132,11 +132,26 @@ class GameLogic {
     }    
 
 
-
+    void mvSimulation(){
+        while(1)
+        {
+            Direction cd = 
+        }
+    }
+    void printBoart()
+    {
+        for (int height=0; height<16; height++){
+            for(int width=0; width<32; width++){
+            std::cout<<snakeState[calculateIndexOfCoordinates(width, height)];    
+            }
+            std::cout<<"\n";
+        }
+    }
 };
 
 int main()
 {
+    GameLogic g;
     std::cout<<((-65)%64);
     return 0;
 }
