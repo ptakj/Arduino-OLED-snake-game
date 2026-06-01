@@ -23,26 +23,38 @@ enum Direction : uint8_t{
     Right
 };
 
+std::string getDirectionName(Direction d) {
+    switch (d) {
+        case Up:    return "Up";
+        case Down:  return "Down";
+        case Left:  return "Left";
+        case Right: return "Right";
+        default:    return "Unknown";
+    }
+}
+
 class GameLogic {
     private:
-    Direction currentDirection = Direction.Right;
+    Direction currentDirection = Direction::Right;
     const uint8_t ROWS = 16;
     const uint8_t COLLUMNS = 32;
     int snakeState[512] = {-1}; // from 0 to 512, from tail to head, -1 equals empty
-    uint8_t score = 1;
-    int apple;
+    int score = 0;
+    int apple = 15;
 
     public:
 
     void setup (){
         srand(time(NULL));
-        snakeState[calculateIndexOfCoordinates(8,15)];
+        for(int i = 0; i < 512; i++) snakeState[i] = -1;
+        snakeState[calculateIndexOfCoordinates(8,15)] = 0;
+        generateApple();
     }
 
-    void generateApple(){
-        int tmp = rand()%512; 
+    void generateApple(){   
+        int tmp = (rand()%512); 
         while(snakeState[tmp] != -1){
-            tmp = rand()%512; 
+            tmp = (rand()%512); 
         }
         apple = tmp;
     }
@@ -50,14 +62,13 @@ class GameLogic {
 
     //width
     int calculateCollumn(int position){
-    return position%COLLUMNS;
+        return position%COLLUMNS;
     }
 
 
     //height
     int calculateRows(int position){
-    return (position+1)%COLLUMNS == 0 ? ((position+1)/COLLUMNS - 1)  : ((position+1)/COLLUMNS);
-    }
+        return position / COLLUMNS;    }
 
 
     int getHeadPosition(){
@@ -70,7 +81,7 @@ class GameLogic {
     }
 
     int calculateIndexOfCoordinates(int row, int collumn){
-        return row == 0 ? collumn : ((row-1)*COLLUMNS + row);
+        return (row * COLLUMNS) + collumn;
     }
 
     int normaliseHeight(int height){
@@ -117,9 +128,23 @@ class GameLogic {
         
         height = normaliseHeight(height);
         width = normaliseWidth(width);
-        return calculateIndexOfCoordinates(width, height);
+        return calculateIndexOfCoordinates(height, width);
     }
 
+    void changeSnakePosition(int nextPosition){
+        for (int i=0; i<512; i++){
+            if (snakeState[i] != -1){
+                snakeState[i]--;
+            }
+        }
+        snakeState[nextPosition] = score;
+    }
+
+    void changeSnakePositionAfterEatingApple(){
+        score++;
+        snakeState[apple] = score;
+        generateApple();
+    }
 
     const int* getSnakeState()
     {
@@ -132,26 +157,83 @@ class GameLogic {
     }    
 
 
-    void mvSimulation(){
-        while(1)
-        {
-            Direction cd = 
-        }
-    }
     void printBoart()
     {
+        std::cout << "\n\n\n\n\n";
         for (int height=0; height<16; height++){
             for(int width=0; width<32; width++){
-            std::cout<<snakeState[calculateIndexOfCoordinates(width, height)];    
+            std::cout<<char(snakeState[calculateIndexOfCoordinates(height, width)] + int(' ') + 1);    
             }
             std::cout<<"\n";
         }
     }
+
+
+    void turn(Direction moveDirrection){
+        int position = getHeadPosition();
+        int nextPosition = move(moveDirrection, position);
+        if (snakeState[nextPosition] >= 0 ){
+            score = 0;
+            for (int i=0; i<512; i++){
+                snakeState[i] = -1;
+            }
+            return;
+        }
+
+        if( nextPosition == apple){
+            changeSnakePositionAfterEatingApple();
+
+        }
+        else
+            changeSnakePosition(nextPosition);        
+    }
+
+    Direction randDirection(){
+        int rnd = rand()%4;
+        switch (rnd){
+            //case 0:
+            //    return Direction::Up;
+            case 1:
+                return Direction::Down;
+            case 2:
+                return Direction::Left;
+            default:
+                return Direction::Right;
+        }
+    }
+
+    void simGame()
+    {
+        while(1){
+        Direction d = randDirection();
+        std::cout<<apple<<"\n"<<score<<"\n";
+        std::cout<<getDirectionName(d);
+         
+        turn(d);
+        //printBoart();
+        }
+    }
 };
+
+class MicroControllerLogic{
+    private:
+    GameLogic CurrentGame;
+    Direction ReadPressedDirection(){};
+    void GameStateHandler(){};
+    void ScoreDisplayHandle(){};
+    void GameDisplayHandler(){};
+    void MainLoopHandler(){};
+    public:
+    //TODO! OLED to dislay gameboard, 7 segment display to display current score, 
+
+};
+
 
 int main()
 {
+
     GameLogic g;
-    std::cout<<((-65)%64);
+    g.setup();
+    g.simGame();
     return 0;
 }
