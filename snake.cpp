@@ -195,8 +195,8 @@ class GameLogic {
             //    return Direction::Up;
             case 1:
                 return Direction::Down;
-            case 2:
-                return Direction::Left;
+            //case 2:
+            //    return Direction::Left;
             default:
                 return Direction::Right;
         }
@@ -210,7 +210,7 @@ class GameLogic {
         std::cout<<getDirectionName(d);
          
         turn(d);
-        //printBoart();
+        printBoart();
         }
     }
 };
